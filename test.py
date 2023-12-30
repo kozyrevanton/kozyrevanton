@@ -8,16 +8,16 @@ import pandas as pd
 
 @st.cache_data
 def load_data():
-    if not os.path.isfile("data/iris.csv"):
+    if not os.path.isfile("iris.csv"):
     # Download the Iris Fisher dataset
         url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
         response = requests.get(url)
         data = response.text
         # Save the dataset to a local file
-        with open("data/iris.csv", "w") as file:
+        with open("iris.csv", "w") as file:
             file.write(data)
     # Load the dataset into a pandas DataFrame
-    df = pd.read_csv("data/iris.csv", header=None,
+    df = pd.read_csv("iris.csv", header=None,
                      names=["sepal_length", "sepal_width", "petal_length", "petal_width", "class"])
     return df
 
