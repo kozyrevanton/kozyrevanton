@@ -519,7 +519,7 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         print("CB модель обучена")
     return best_Model
 def main():
-   
+    global model
     page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
     if page == "Параметры моделей и выбор лучшей модели":
         st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
@@ -539,7 +539,6 @@ def main():
         st.write("После обучения модели можно будет проводить анализ данных")    
         if  st.button("Запуск обучения модели"):
             st.write('Идет обучение модели и выбор лучшей')
-            global model
             model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
             st.write('Обучение модели закончено. Лучшая модель:')
             st.write(model)   
