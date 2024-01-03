@@ -38,7 +38,7 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
-def Learning_model(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
+def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_check=True,CB_check=True, kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
     # Считываем данные
     print("Начинаем считывать файл с данными")
     df = pd.read_csv('data.csv')
@@ -537,7 +537,7 @@ def main():
         st.write("После обучения модели можно будет проводить анализ данных")    
         if  st.button("Запуск обучения модели"):
             st.write('Идет обучение модели и выбор лучшей')
-            model = Learning_model(kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
+            model = Learning_model(KNN_check=KNN_check,LR_check=LR_check,AB_check=AB_check,RF_check=RF_check,XGB_check=XGB_check,CB_check=CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
             st.write('Обучение модели закончено. Лучшая модель:')
             st.write(model)   
             
@@ -556,13 +556,6 @@ def predict_bunkrot(file_data):
     X = np.array(df[df._get_numeric_data().columns])
     y = model(X)
     st.write(y)
-    
-KNN_check = True
-LR_check = True
-AB_check = True
-RF_check = True
-XGB_check = True
-CB_check = True
-model = 0
+   
 if __name__ == "__main__":
     main()
