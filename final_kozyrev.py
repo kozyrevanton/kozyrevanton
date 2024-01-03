@@ -523,5 +523,5 @@ if __name__ == "__main__":
     if  st.button("Запуск обучения модели"):
         st.write('Идет обучение модели и выбор лучшей')
         model = main(kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
-        st.write('Обучение модели законцено. Лучшая модель:')
+        st.write('Обучение модели закончено. Лучшая модель:')
         st.write(model)        
