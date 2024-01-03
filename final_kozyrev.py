@@ -88,8 +88,7 @@ f, ax = plt.subplots(figsize=(30, 25))
 mat = df.corr('spearman')
 mask = np.triu(np.ones_like(mat, dtype=bool))
 cmap = sns.diverging_palette(230, 20, as_cmap=True)
-sns.heatmap(mat, mask=mask, cmap=cmap, vmax=1, center=0,# annot = True,
-            square=True, linewidths=.5, cbar_kws={"shrink": .5})
+sns.heatmap(mat, mask=mask, cmap=cmap, vmax=1, center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5})
 plt.show()
 
 """Для начала используем модель k ближайших соседей"""
