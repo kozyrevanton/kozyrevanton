@@ -265,11 +265,11 @@ X_smote, y_smote = smt.fit_resample(X, y)
 
 X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, test_size=0.2)
 
-# clf_knn = knn.fit(X_s_train, y_s_train)
+clf_knn = knn.fit(X_s_train, y_s_train)
 
 # # получаем от них предикты
-# y_s_knn = clf_knn.predict(X_s_test)
-# y_knn = clf_knn.predict(X_test)
+y_s_knn = clf_knn.predict(X_s_test)
+y_knn = clf_knn.predict(X_test)
 
 # fig = plt.figure(figsize=(8,8))
 # nn_mtx = metrics.confusion_matrix(y_test, y_knn)
@@ -294,10 +294,10 @@ X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, te
 # Сохраним эти метрики в переменной best_metrics, best_metrics_s
 # """
 
-# best_metrics = metrics.classification_report(y_test, y_knn)
-# best_f1 = metrics.f1_score(y_test, y_knn)
-# best_metrics_s = metrics.classification_report(y_s_test, y_s_knn)
-# best_s_f1 = metrics.f1_score(y_s_test, y_s_knn)
+best_metrics = metrics.classification_report(y_test, y_knn)
+best_f1 = metrics.f1_score(y_test, y_knn)
+best_metrics_s = metrics.classification_report(y_s_test, y_s_knn)
+best_s_f1 = metrics.f1_score(y_s_test, y_s_knn)
 
 # """рассмотрим ещё несколько моделей, которые можно использовать для обучения на нашей выборке. И выберем самую лучшую по показателю F1.
 
@@ -430,7 +430,7 @@ clf.fit(X_s_train, y_s_train,
 clf_r = clf.predict(X_test)
 clf_r_s = clf.predict(X_s_test)
 
-# if metrics.f1_score(y_test, clf_r) > best_f1:
+if metrics.f1_score(y_test, clf_r) > best_f1:
   best_f1 = metrics.f1_score(y_test, clf_r)
   best_metrics = metrics.classification_report(y_test, clf_r)
   print('best_f1:',best_f1)
