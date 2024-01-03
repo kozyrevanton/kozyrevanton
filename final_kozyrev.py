@@ -552,12 +552,16 @@ def main():
        
 def predict_bunkrot(file_data):
     df = pd.read_csv(file_data)
-
+    X = np.array(df[df._get_numeric_data()).columns])
+    y = model(X)
+    st.write(y)
+    
 KNN_check = True
 LR_check = True
 AB_check = True
 RF_check = True
 XGB_check = True
 CB_check = True
+model = 0
 if __name__ == "__main__":
     main()
