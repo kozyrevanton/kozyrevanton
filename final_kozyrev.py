@@ -397,7 +397,7 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
     # Дальше используем следующую модель:
     # 3. RandomForestClassifier
     # 
-    if rf_check: 
+    if RF_check: 
         rf = RandomForestClassifier(n_estimators=rf_n_estimators)
         rf.fit(X_train, y_train)
         rfc = rf.predict(X_test)
