@@ -549,9 +549,9 @@ def main():
             st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
             file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
             if file_data is not None:
-                predict_bunkrot(file_data)
+                predict_bunkrot(model,file_data)
        
-def predict_bunkrot(file_data):
+def predict_bunkrot(model,file_data):
     df = pd.read_csv(file_data)
     X = np.array(df[df._get_numeric_data().columns])
     y = model(X)
