@@ -564,4 +564,5 @@ def predict_bunkrot(model,file_data):
 if __name__ == "__main__":
     if 'model' not in locals() and 'model' not in globals():
         model = 1
+    st.write(model)
     main()
