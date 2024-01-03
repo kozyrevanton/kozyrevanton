@@ -552,5 +552,12 @@ def main():
        
 def predict_bunkrot(file_data):
     df = pd.read_csv(file_data)
+
+KNN_check = True
+LR_check = True
+AB_check = True
+RF_check = True
+XGB_check = True
+CB_check = True
 if __name__ == "__main__":
     main()
