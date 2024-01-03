@@ -36,27 +36,9 @@ from imblearn.over_sampling import SMOTE
 import warnings
 warnings.filterwarnings(action="ignore")
 
-!pip install catboost
-
 from catboost import CatBoostClassifier
-
-path, dirs, files1 = next(os.walk(os.getcwd()))
-count = len(files1)
-print(count)
-if count <1:
-  uploaded = files.upload()
-
-  for fn in uploaded.keys():
-    print('User uploaded file "{name}" with length {length} bytes'.format(
-        name=fn, length=len(uploaded[fn])))
-
-if count <1:
-  !mkdir -p ~/.kaggle/ && mv kaggle.json ~/.kaggle/ && chmod 600 ~/.kaggle/kaggle.json
-  !kaggle datasets download "fedesoriano/company-bankruptcy-prediction"
-  !unzip -q company-bankruptcy-prediction.zip
-
 # Считываем данные
-df = pd.read_csv('/content/data.csv')
+df = pd.read_csv('data.csv')
 df.head()
 
 len(df)
