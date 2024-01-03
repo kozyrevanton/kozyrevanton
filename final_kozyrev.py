@@ -552,7 +552,7 @@ def main():
        
 def predict_bunkrot(file_data):
     df = pd.read_csv(file_data)
-    X = np.array(df[df._get_numeric_data()).columns])
+    X = np.array(df[df._get_numeric_data().columns])
     y = model(X)
     st.write(y)
     
