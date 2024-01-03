@@ -38,7 +38,7 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
-def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
+def Learning_model(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
     # Считываем данные
     print("Начинаем считывать файл с данными")
     df = pd.read_csv('data.csv')
@@ -516,24 +516,48 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
         
         print("CB модель обучена")
     return best_Model
-    
+def main():
+    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
+    model = 0
+    if page == "Параметры моделей и выбор лучшей модели":
+        st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
+        KNN_check = st.checkbox('Классификатор умный kNN',value=True)
+        KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
+        LR_check = st.checkbox('Метод логистической регрессии',value=True)
+        LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
+        AB_check = st.checkbox('Метод AdaBoost',value=True)
+        Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
+        RF_check = st.checkbox('Метод Случайного леса',value=True)
+        RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
+        XGB_check = st.checkbox('Метод градиентного бустинга',value=True)
+        XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
+        CB_check = st.checkbox('Модель CatBoost',value=True)
+        CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
+        st.write("После обучения модели можно будет проводить анализ данных")    
+        if  st.button("Запуск обучения модели"):
+            st.write('Идет обучение модели и выбор лучшей')
+            model = Learning_model(kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
+            st.write('Обучение модели закончено. Лучшая модель:')
+            st.write(model)   
+            
+    elif page == "Выполнение прогноза банкротства":
+        st.header("Прогноз банкротства на основании финансовых показателей компании")
+        if model == 0:
+            st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
+        else:
+            st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
+            file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
+            if file_data is not None:
+                predict_bunkrot(file_data)
+       
+def predict_bunkrot(file_data):
+    df = pd.read_csv(file_data)
+
+KNN_check = True
+LR_check = True
+AB_check = True
+RF_check = True
+XGB_check = True
+CB_check = True
 if __name__ == "__main__":
-    st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
-    KNN_check = st.checkbox('Классификатор умный kNN',value=True)
-    KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
-    LR_check = st.checkbox('Метод логистической регрессии',value=True)
-    LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
-    AB_check = st.checkbox('Метод AdaBoost',value=True)
-    Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
-    RF_check = st.checkbox('Метод Случайного леса',value=True)
-    RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
-    XGB_check = st.checkbox('Метод градиентного бустинга',value=True)
-    XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
-    CB_check = st.checkbox('Модель CatBoost',value=True)
-    CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
-    st.write("После обучения модели можно будет проводить анализ данных")    
-    if  st.button("Запуск обучения модели"):
-        st.write('Идет обучение модели и выбор лучшей')
-        model = main(kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
-        st.write('Обучение модели закончено. Лучшая модель:')
-        st.write(model)        
+    main()
