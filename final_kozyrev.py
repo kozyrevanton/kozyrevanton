@@ -428,9 +428,10 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     
     clf = xgb.XGBClassifier(**param_dist)
     
-    clf.fit(X_train, y_train,
-            eval_set=[(X_test, y_test)],
-            eval_metric='mae')
+    clf.fit(X_train, y_train)
+            # ,
+            # eval_set=[(X_test, y_test)],
+            # eval_metric='mae')
     clf_r = clf.predict(X_test)
     
     if metrics.f1_score(y_test, clf_r) > best_f1:
@@ -440,9 +441,10 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     
     # опять результаты не лучше стали. Обучим на расширенных данных:
     
-    clf.fit(X_s_train, y_s_train,
-            eval_set=[(X_s_test, y_s_test)],
-            eval_metric='mae')
+    clf.fit(X_s_train, y_s_train)
+    #         ,
+    #         eval_set=[(X_s_test, y_s_test)],
+    #         eval_metric='mae')
     clf_r = clf.predict(X_test)
     clf_r_s = clf.predict(X_s_test)
     
