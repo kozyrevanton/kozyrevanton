@@ -38,7 +38,7 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
-def main():
+def main(kNN=13,max_iter=100,max_estimators=150):
     # Считываем данные
     df = pd.read_csv('data.csv')
     # df.head()
@@ -208,24 +208,24 @@ def main():
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
-    """Используем классификатор умный kNN"""
+    # Используем классификатор умный kNN
     
     # импортируем и создаем knn классификатор по аналогии
-    knn = KNeighborsClassifier(n_neighbors=13)
+    knn = KNeighborsClassifier(n_neighbors=kNN)
     # тренируем для knn
     clf_knn = knn.fit(X_train, y_train)
     
     # получаем от них предикты
     y_knn = clf_knn.predict(X_test)
     
-    # """смотрим какой процент правильных предсказаний для каждой из двух моделей
+    # смотрим какой процент правильных предсказаний для каждой из двух моделей
     
     # $$Accuracy = \frac{\sum_{x_i, y_i \in (X, Y)} I(y(x_i) = y_i)}{|(X, Y)|} = \frac{num~right~classified~obj}{num~all~obj}$$
-    # """
+    # 
     
     # print ('knn =', metrics.accuracy_score(y_test, y_knn))
     
-    # """для каждого из класса смотрим количество правильных и неправильных предсказаний, визуализируем данные"""
+    # для каждого из класса смотрим количество правильных и неправильных предсказаний, визуализируем данные"""
     
     # нужно получить кол-во правильных и неправильых предсказаний по каждому классу от knn
     
@@ -243,7 +243,7 @@ def main():
     # plt.ylabel("Real value")
     # plt.xlabel("Predicted value")
     
-    # """
+    # 
     
     # $$Recall = \frac{TP}{TP + FN}$$
     
@@ -251,17 +251,17 @@ def main():
     
     # print(metrics.classification_report(y_test, y_knn))
     
-    # """F1 - метрика, по котой мы можем определить качество модели вцелом - агрегированный показатель
+    #F1 - метрика, по котой мы можем определить качество модели вцелом - агрегированный показатель
     
     # $$F1 = 2 \cdot \frac{Precision \cdot Recall}{Precision + Recall}$$
-    # """
+    # 
     
     # print ('knn =', metrics.f1_score(y_test, y_knn))
     
-    # """![](https://img.grepmed.com/uploads/8345/specificity-table-confusionmatrix-biostatistics-contingency-original.jpeg)
+    # ![](https://img.grepmed.com/uploads/8345/specificity-table-confusionmatrix-biostatistics-contingency-original.jpeg)
     
     # Основная причина в таких плохих показателях - в несбалансированности выборки. дополним наши данные для сбалансированности выборки
-    # """
+    # 
     
     smt = SMOTE()
     X_smote, y_smote = smt.fit_resample(X, y)
@@ -287,15 +287,15 @@ def main():
     # plt.ylabel("Real value")
     # plt.xlabel("Predicted value")
     
-    # """Способность обнаруживать класс выросла. Посмотрим общие метрики модели:"""
+    # Способность обнаруживать класс выросла. Посмотрим общие метрики модели:
     
     # print(metrics.classification_report(y_test, y_knn))
     
     # print(metrics.classification_report(y_s_test, y_s_knn))
     
-    # """Получается что качество модели, на сбалансированных данных чущественно лучше. Но даже проверка на исходных данных показывает, что результат работы модели стал лучше
+    # Получается что качество модели, на сбалансированных данных чущественно лучше. Но даже проверка на исходных данных показывает, что результат работы модели стал лучше
     # Сохраним эти метрики в переменной best_metrics, best_metrics_s
-    # """
+    # 
     
     best_metrics = metrics.classification_report(y_test, y_knn)
     best_f1 = metrics.f1_score(y_test, y_knn)
@@ -303,12 +303,12 @@ def main():
     best_s_f1 = metrics.f1_score(y_s_test, y_s_knn)
     best_Model = clf_knn
     
-    # """рассмотрим ещё несколько моделей, которые можно использовать для обучения на нашей выборке. И выберем самую лучшую по показателю F1.
+    # рассмотрим ещё несколько моделей, которые можно использовать для обучения на нашей выборке. И выберем самую лучшую по показателю F1.
     
     # 1. Logistic Regression
-    """
+
     
-    clf = LogisticRegression(class_weight = 'balanced')
+    clf = LogisticRegression(class_weight = 'balanced', max_iter=LR_max_iter)
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
     
@@ -318,7 +318,7 @@ def main():
     
     print(metrics.classification_report(y_test, predictions))
     
-    clf = LogisticRegression(class_weight = 'balanced')
+    clf = LogisticRegression(class_weight = 'balanced', max_iter=LR_max_iter)
     
     X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, test_size=0.2)
     
@@ -348,9 +348,9 @@ def main():
     # 2. AdaBoostClassifier
     
     # Обучим на обычной выборке, и на расширенной
-    # """
+    # 
     
-    clf_sklearn = AdaBoostClassifier(n_estimators=50) # If None, then the base estimator is DecisionTreeClassifier initialized with max_depth=1.
+    clf_sklearn = AdaBoostClassifier(n_estimators=max_estimators) # If None, then the base estimator is DecisionTreeClassifier initialized with max_depth=1.
     clf_sklearn.fit(X_train, y_train)
     y_pred_sklearn = clf_sklearn.predict(X_test)
     
@@ -359,11 +359,11 @@ def main():
       best_metrics = metrics.classification_report(y_test, y_pred_sklearn)
       print('best_f1:',best_f1)
     
-    # """Обучим на расширенных данных. Также изменим параметр n_estimators на 150.
+    # Обучим на расширенных данных. Также изменим параметр n_estimators на 150.
     
-    # """
+    # 
     
-    clf_sklearn_s = AdaBoostClassifier(n_estimators=150) # If None, then the base estimator is DecisionTreeClassifier initialized with max_depth=1.
+    clf_sklearn_s = AdaBoostClassifier(n_estimators=max_estimators) # If None, then the base estimator is DecisionTreeClassifier initialized with max_depth=1.
     clf_sklearn_s.fit(X_s_train, y_s_train)
     y_pred_sklearn_s = clf_sklearn_s.predict(X_s_test)
     y_pred_sklearn = clf_sklearn_s.predict(X_test)
@@ -379,9 +379,9 @@ def main():
       best_metrics_s = metrics.classification_report(y_s_test, y_pred_sklearn_s)
       print('best_s_f1:',best_s_f1)
     
-    # """Дальше используем следующую модель:
+    # Дальше используем следующую модель:
     # 3. RandomForestClassifier
-    # """
+    # 
     
     rf = RandomForestClassifier(n_estimators=500)
     rf.fit(X_train, y_train)
@@ -392,7 +392,7 @@ def main():
       best_metrics = metrics.classification_report(y_test, rfc)
       print('best_f1:',best_f1)
     
-    # """Модель не стала лучше. Обученим на расширенных данных:"""
+    # Модель не стала лучше. Обученим на расширенных данных:
     
     rf = RandomForestClassifier(n_estimators=500)
     rf.fit(X_s_train, y_s_train)
@@ -411,11 +411,11 @@ def main():
       best_metrics_s = metrics.classification_report(y_s_test, rfc_s)
       print('best_s_f1:',best_s_f1)
     
-    # """модель получилась существенно лучше прежней
+    # модель получилась существенно лучше прежней
     
     # Попробуем следующую модель:
     # 4. Градиентный бустринг
-    # """
+    # 
     
     param_dist = {'objective':'binary:logistic', 'n_estimators':100}
     
@@ -431,7 +431,7 @@ def main():
       best_metrics = metrics.classification_report(y_test, clf_r)
       print('best_f1:',best_f1)
     
-    """опять результаты не лучше стали. Обучим на расширенных данных:"""
+    # опять результаты не лучше стали. Обучим на расширенных данных:
     
     clf.fit(X_s_train, y_s_train,
             eval_set=[(X_s_test, y_s_test)],
@@ -450,18 +450,18 @@ def main():
       best_metrics_s = metrics.classification_report(y_s_test, clf_r_s)
       print('best_s_f1:',best_s_f1)
     
-    # """Оба параметра стали ещё лучше. посмотрим расширенные значения метрик:"""
+    # Оба параметра стали ещё лучше. посмотрим расширенные значения метрик:
     
     print(best_metrics_s)
     
     print(best_metrics)
     
-    # """И попробуем последнюю, пятую модель:
+    # И попробуем последнюю, пятую модель:
     # 5. CatBoostClassifier
-    # """
+    # 
     
     model = CatBoostClassifier(iterations=2000,
-                               task_type="GPU",
+                               task_type="CPU",
                                devices='0:1',
                                  use_best_model=True,)
     
@@ -477,7 +477,7 @@ def main():
     
       
     
-    # """результаты модели не улучшились. Обучим на расширенных данныхх, как и ранее:"""
+    # результаты модели не улучшились. Обучим на расширенных данныхх, как и ранее:
     
     model.fit(X_s_train, y_s_train, verbose=True, eval_set=[(X_s_test, y_s_test)])
     preds = model.predict(X_test)
@@ -495,20 +495,24 @@ def main():
       best_metrics_s = metrics.classification_report(y_s_test, preds_s)
       print('best_s_f1:',best_s_f1)
     
-    # """Выведем в итоге самые лучшие метрики.
+    # Выведем в итоге самые лучшие метрики.
     
     # Первая - для тестовой выборки из исходных данных,
     # Вторая - для тестовой выборки из расширенных данных.
-    # """
+    # 
     
     print(best_metrics)
     
     print(best_Model)
     return best_Model
 if __name__ == "__main__":
-   
+    st.header("""Параметры для обучения моделей. Будет выбрана лучше модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
+    kNN = st.slider('классификатор умный kNN', 1, 25, 13, 1)
+    LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
+    max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
+
     if  st.button("Запуск обучения модели"):
         st.write('Идет обучение модели и выбор лучшей')
-        model = main()
+        model = main(kNN, LR_max_iter, max_estimators)
         st.write('Обучение модели законцено. Лучшая модель:')
         st.write(model)        
