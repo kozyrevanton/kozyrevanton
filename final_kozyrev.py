@@ -566,7 +566,8 @@ def main():
 def predict_bunkrot(file_data):
     df = pd.read_csv(file_data)
     X = np.array(df[df._get_numeric_data().columns])
-    y = model(X)
+    y = model.predict(X)
+    st.write("Результат предсказания банкротства:")
     st.write(y)
    
 if __name__ == "__main__":
