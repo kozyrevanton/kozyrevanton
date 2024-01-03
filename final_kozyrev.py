@@ -405,8 +405,8 @@ X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, te
 # """модель получилась существенно лучше прежней
 
 # Попробуем следующую модель:
-4. Градиентный бустринг
-"""
+# 4. Градиентный бустринг
+# """
 
 param_dist = {'objective':'binary:logistic', 'n_estimators':100}
 
@@ -447,45 +447,45 @@ print(best_metrics_s)
 print(best_metrics)
 
 """И попробуем последнюю, пятую модель:
-5. CatBoostClassifier
-"""
+# 5. CatBoostClassifier
+# """
 
-model = CatBoostClassifier(iterations=2000,
-                           task_type="GPU",
-                           devices='0:1',
-                             use_best_model=True,)
+# model = CatBoostClassifier(iterations=2000,
+#                            task_type="GPU",
+#                            devices='0:1',
+#                              use_best_model=True,)
 
-model.fit(X_train, y_train, verbose=True, eval_set=[(X_test, y_test)])
+# model.fit(X_train, y_train, verbose=True, eval_set=[(X_test, y_test)])
 
-preds = model.predict(X_test)
+# preds = model.predict(X_test)
 
-if metrics.f1_score(y_test, preds) > best_f1:
-  best_f1 = metrics.f1_score(y_test, preds)
-  best_metrics = metrics.classification_report(y_test, preds)
-  print('best_f1:',best_f1)
+# if metrics.f1_score(y_test, preds) > best_f1:
+#   best_f1 = metrics.f1_score(y_test, preds)
+#   best_metrics = metrics.classification_report(y_test, preds)
+#   print('best_f1:',best_f1)
 
-"""результаты модели не улучшились. Обучим на расширенных данныхх, как и ранее:"""
+# """результаты модели не улучшились. Обучим на расширенных данныхх, как и ранее:"""
 
-model.fit(X_s_train, y_s_train, verbose=True, eval_set=[(X_s_test, y_s_test)])
-preds = model.predict(X_test)
-preds_s = model.predict(X_s_test)
+# model.fit(X_s_train, y_s_train, verbose=True, eval_set=[(X_s_test, y_s_test)])
+# preds = model.predict(X_test)
+# preds_s = model.predict(X_s_test)
 
-if metrics.f1_score(y_test, preds) > best_f1:
-  best_f1 = metrics.f1_score(y_test, preds)
-  best_metrics = metrics.classification_report(y_test, preds)
-  print('best_f1:',best_f1)
+# if metrics.f1_score(y_test, preds) > best_f1:
+#   best_f1 = metrics.f1_score(y_test, preds)
+#   best_metrics = metrics.classification_report(y_test, preds)
+#   print('best_f1:',best_f1)
 
-if metrics.f1_score(y_s_test, preds_s) > best_s_f1:
-  best_s_f1 = metrics.f1_score(y_s_test, preds_s)
-  best_metrics_s = metrics.classification_report(y_s_test, preds_s)
-  print('best_s_f1:',best_s_f1)
+# if metrics.f1_score(y_s_test, preds_s) > best_s_f1:
+#   best_s_f1 = metrics.f1_score(y_s_test, preds_s)
+#   best_metrics_s = metrics.classification_report(y_s_test, preds_s)
+#   print('best_s_f1:',best_s_f1)
 
-"""Выведем в итоге самые лучшие метрики.
+# """Выведем в итоге самые лучшие метрики.
 
-Первая - для тестовой выборки из исходных данных,
-Вторая - для тестовой выборки из расширенных данных.
-"""
+# Первая - для тестовой выборки из исходных данных,
+# Вторая - для тестовой выборки из расширенных данных.
+# """
 
-print(best_metrics)
+# print(best_metrics)
 
-print(best_metrics_s)
+# print(best_metrics_s)
