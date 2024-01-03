@@ -522,6 +522,7 @@ def main():
     if page == "Параметры моделей и выбор лучшей модели":
         st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
         KNN_check = st.checkbox('Классификатор умный kNN',value=True)
+        st.write(KNN_check)
         KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
         LR_check = st.checkbox('Метод логистической регрессии',value=True)
         LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
@@ -552,12 +553,16 @@ def main():
        
 def predict_bunkrot(file_data):
     df = pd.read_csv(file_data)
-
+    X = np.array(df[df._get_numeric_data().columns])
+    y = model(X)
+    st.write(y)
+    
 KNN_check = True
 LR_check = True
 AB_check = True
 RF_check = True
 XGB_check = True
 CB_check = True
+model = 0
 if __name__ == "__main__":
     main()
