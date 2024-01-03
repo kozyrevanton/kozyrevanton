@@ -180,23 +180,23 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
         
         # X.T.std(axis=1)
         
-        X = (X - X.T.mean())/X.T.std()
+        X_ = (X - X.T.mean())/X.T.std()
         
         # X.mean(axis=0)
         
         # X.std(axis=0)
         
-        X = (X - X.mean(axis=0))/X.std(axis=0)
+        X_ = (X - X.mean(axis=0))/X.std(axis=0)
         # X
         
-        X_scaled = scale(np.array(X, dtype='float'), with_std=True, with_mean=True)
+        X_scaled = scale(np.array(X_, dtype='float'), with_std=True, with_mean=True)
         
         # минимакс шкалирование
         scaler = MinMaxScaler()
         # инициализируем на основе данных X
-        scaler.fit(X)
+        scaler.fit(X_)
         # трансформируем X (потом этим же объектом scaler трансформируем test)
-        scaler.transform(X)
+        scaler.transform(X_)
         
         # (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
         
@@ -218,6 +218,8 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
         # импортируем и создаем knn классификатор по аналогии
         knn = KNeighborsClassifier(n_neighbors=kNN)
         # тренируем для knn
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        
         clf_knn = knn.fit(X_train, y_train)
         
         # получаем от них предикты
@@ -312,6 +314,7 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
 
         print("KNN модель обучена")
     
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
     # рассмотрим ещё несколько моделей, которые можно использовать для обучения на нашей выборке. И выберем самую лучшую по показателю F1.
     
