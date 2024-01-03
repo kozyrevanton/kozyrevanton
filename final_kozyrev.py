@@ -519,14 +519,7 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         print("CB модель обучена")
     return best_Model
 def main():
-    engine = create_engine('postgresql://<username>:<password>@localhost:5432/<database name>')
-
-    #Получение ID сеанса 
-    session_id = get_session_id()
-
-    #Создание таблиц состояния сеанса 
-    engine.execute("CREATE TABLE IF NOT EXISTS %s (size text)" % (session_id))
-    
+   
     page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
     if page == "Параметры моделей и выбор лучшей модели":
         st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
