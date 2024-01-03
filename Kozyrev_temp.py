@@ -475,34 +475,34 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
     # 5. CatBoostClassifier
     # 
     if CB_check:
-        model = CatBoostClassifier(iterations=cb_iterations,
+        model_CB = CatBoostClassifier(iterations=cb_iterations,
                                    task_type="CPU",
                                    devices='0:1',
                                      use_best_model=True,)
         
-        model.fit(X_train, y_train, verbose=True, eval_set=[(X_test, y_test)])
+        model_CB.fit(X_train, y_train, verbose=True, eval_set=[(X_test, y_test)])
         
-        preds = model.predict(X_test)
+        preds = model_CB.predict(X_test)
         
         if metrics.f1_score(y_test, preds) > best_f1:
           best_f1 = metrics.f1_score(y_test, preds)
           best_metrics = metrics.classification_report(y_test, preds)
           print('best_f1:',best_f1) 
-          best_Model = model
+          best_Model = model_CB
         
           
         
         # результаты модели не улучшились. Обучим на расширенных данныхх, как и ранее:
         
-        model.fit(X_s_train, y_s_train, verbose=True, eval_set=[(X_s_test, y_s_test)])
-        preds = model.predict(X_test)
-        preds_s = model.predict(X_s_test)
+        model_CB.fit(X_s_train, y_s_train, verbose=True, eval_set=[(X_s_test, y_s_test)])
+        preds = model_CB.predict(X_test)
+        preds_s = model_CB.predict(X_s_test)
         
         if metrics.f1_score(y_test, preds) > best_f1:
           best_f1 = metrics.f1_score(y_test, preds)
           best_metrics = metrics.classification_report(y_test, preds)
           print('best_f1:',best_f1)
-          best_Model = model
+          best_Model = model_CB
          
         
         if metrics.f1_score(y_s_test, preds_s) > best_s_f1:
