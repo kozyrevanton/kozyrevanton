@@ -545,8 +545,12 @@ def main():
         if model = 0:
             st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
         else:
-            st.write("Выберите файл для загрузки исходных данных")           
+            st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
+            file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
+            if file_data is not None:
+                predict_bunkrot(file_data)
        
-
+def predict_bunkrot(file_data):
+    df = pd.read_csv(file_data)
 if __name__ == "__main__":
     main()
