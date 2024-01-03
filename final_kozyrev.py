@@ -40,6 +40,7 @@ warnings.filterwarnings(action="ignore")
 from catboost import CatBoostClassifier
 def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimators=100,CB_iterations=1000):
     # Считываем данные
+    print("Начинаем считывать файл с данными")
     df = pd.read_csv('data.csv')
     # df.head()
     print("Данные прочитаны")
