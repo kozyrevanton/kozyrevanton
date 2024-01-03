@@ -509,14 +509,14 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     return best_Model
     
 if __name__ == "__main__":
-    st.header("""Параметры для обучения моделей. Будет выбрана лучше модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
+    st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
     kNN = st.slider('классификатор умный kNN', 1, 25, 13, 1)
     LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
     max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
     RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
     XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
     CB_iterations = st.slider('Число деревьев в методе градиентного бустинга', 1, 3000, 1000, 1)
-
+    st.write("После обучения модели можно будет проводить анализ данных")    
     if  st.button("Запуск обучения модели"):
         st.write('Идет обучение модели и выбор лучшей')
         model = main(kNN, LR_max_iter, max_estimators,RF_n_estimators,XGB_estimators,CB_iterations)
