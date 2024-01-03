@@ -519,9 +519,9 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         print("CB модель обучена")
     return best_Model
 def main():
-    global model
-    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
-    if page == "Параметры моделей и выбор лучшей модели":
+   page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
+   global model
+   if page == "Параметры моделей и выбор лучшей модели":
         st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
         st.write(model)
         KNN_check = st.checkbox('Классификатор умный kNN',value=False)
@@ -553,9 +553,9 @@ def main():
             st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
             file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
             if file_data is not None:
-                predict_bunkrot(model,file_data)
+                predict_bunkrot(file_data)
        
-def predict_bunkrot(model,file_data):
+def predict_bunkrot(file_data):
     df = pd.read_csv(file_data)
     X = np.array(df[df._get_numeric_data().columns])
     y = model(X)
@@ -564,5 +564,6 @@ def predict_bunkrot(model,file_data):
 if __name__ == "__main__":
     if 'model' not in locals() and 'model' not in globals():
         model = 1
+        st.write("присвоили значение модели:",model)
     st.write(model)
     main()
