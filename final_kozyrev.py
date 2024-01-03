@@ -39,22 +39,6 @@ warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
 
-from sqlalchemy import create_engine
-from streamlit.report_thread import get_report_ctx
-
-def get_session_id():
-    session_id = get_report_ctx().session_id
-    session_id = session_id.replace('-','_')
-    session_id = '_id_' + session_id
-    return session_id
-def write_state(column,value,engine,session_id):
-    engine.execute("UPDATE %s SET %s='%s'" %(session_id,column,value))
-    
-def read_state(column,engine,session_id):
-    state_var = engine.execute("SELECT %s FROM %s" % (column,session_id))
-    state_var = state_var.first()[0]
-    return state_var
-    
 def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_check=True,CB_check=True, kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
     # Считываем данные
     print("Начинаем считывать файл с данными")
@@ -562,15 +546,13 @@ def main(model=0):
         st.write("После обучения модели можно будет проводить анализ данных")    
         if  st.button("Запуск обучения модели"):
             st.write('Идет обучение модели и выбор лучшей')
-            model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
-            write_state('model',model,engine,session_id)
+            global model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
             st.write('Обучение модели закончено. Лучшая модель:')
             st.write(model)   
         st.write(model)
             
     elif page == "Выполнение прогноза банкротства":
         st.header("Прогноз банкротства на основании финансовых показателей компании")
-        model = read_state('model',engine,session_id)
         st.write(model)
         if model == 0:
             st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
@@ -587,5 +569,6 @@ def predict_bunkrot(model,file_data):
     st.write(y)
    
 if __name__ == "__main__":
-    model = 1
+    if model is None:
+        global model = 1
     main(model)
