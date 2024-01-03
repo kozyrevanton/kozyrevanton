@@ -38,11 +38,11 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
-def main(kNN=13,max_iter=100,max_estimators=150):
+def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimators=100,CB_iterations=1000):
     # Считываем данные
     df = pd.read_csv('data.csv')
     # df.head()
-    
+    print("Данные прочитаны")
     # len(df)
     
     # """удаляем дубликаты"""
@@ -207,7 +207,7 @@ def main(kNN=13,max_iter=100,max_estimators=150):
     # """Получается самое лучшее значение 13 - его и подставим дальше"""
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-    
+    print("Данные для обучения и тесты выделены")
     # Используем классификатор умный kNN
     
     # импортируем и создаем knn классификатор по аналогии
@@ -267,6 +267,7 @@ def main(kNN=13,max_iter=100,max_estimators=150):
     X_smote, y_smote = smt.fit_resample(X, y)
     
     X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, test_size=0.2)
+    print("Данные для обучения и тесты расширены")
     
     clf_knn = knn.fit(X_s_train, y_s_train)
     
@@ -302,6 +303,8 @@ def main(kNN=13,max_iter=100,max_estimators=150):
     best_metrics_s = metrics.classification_report(y_s_test, y_s_knn)
     best_s_f1 = metrics.f1_score(y_s_test, y_s_knn)
     best_Model = clf_knn
+    print("KNN модель обучена")
+
     
     # рассмотрим ещё несколько моделей, которые можно использовать для обучения на нашей выборке. И выберем самую лучшую по показателю F1.
     
@@ -343,7 +346,7 @@ def main(kNN=13,max_iter=100,max_estimators=150):
       best_s_f1 = metrics.f1_score(y_s_test, LR_s)
       best_metrics_s = metrics.classification_report(y_s_test, LR_s)
       print('best_s_f1:',best_s_f1)
-    
+    print("LR модель обучена")
     # Рассмотрим следующую модель:
     # 2. AdaBoostClassifier
     
@@ -378,12 +381,13 @@ def main(kNN=13,max_iter=100,max_estimators=150):
       best_s_f1 = metrics.f1_score(y_s_test, y_pred_sklearn_s)
       best_metrics_s = metrics.classification_report(y_s_test, y_pred_sklearn_s)
       print('best_s_f1:',best_s_f1)
+    print("AB модель обучена")
     
     # Дальше используем следующую модель:
     # 3. RandomForestClassifier
     # 
     
-    rf = RandomForestClassifier(n_estimators=500)
+    rf = RandomForestClassifier(n_estimators=RF_n_estimators)
     rf.fit(X_train, y_train)
     rfc = rf.predict(X_test)
     
@@ -394,7 +398,7 @@ def main(kNN=13,max_iter=100,max_estimators=150):
     
     # Модель не стала лучше. Обученим на расширенных данных:
     
-    rf = RandomForestClassifier(n_estimators=500)
+    rf = RandomForestClassifier(n_estimators=RF_n_estimators)
     rf.fit(X_s_train, y_s_train)
     rfc = rf.predict(X_test)
     rfc_s = rf.predict(X_s_test)
@@ -411,13 +415,15 @@ def main(kNN=13,max_iter=100,max_estimators=150):
       best_metrics_s = metrics.classification_report(y_s_test, rfc_s)
       print('best_s_f1:',best_s_f1)
     
+    print("RF модель обучена")
+    
     # модель получилась существенно лучше прежней
     
     # Попробуем следующую модель:
     # 4. Градиентный бустринг
     # 
     
-    param_dist = {'objective':'binary:logistic', 'n_estimators':100}
+    param_dist = {'objective':'binary:logistic', 'n_estimators':XGB_estimators}
     
     clf = xgb.XGBClassifier(**param_dist)
     
@@ -451,16 +457,14 @@ def main(kNN=13,max_iter=100,max_estimators=150):
       print('best_s_f1:',best_s_f1)
     
     # Оба параметра стали ещё лучше. посмотрим расширенные значения метрик:
+    print("модель Градиентного бустинга обучена")
     
-    print(best_metrics_s)
-    
-    print(best_metrics)
     
     # И попробуем последнюю, пятую модель:
     # 5. CatBoostClassifier
     # 
     
-    model = CatBoostClassifier(iterations=2000,
+    model = CatBoostClassifier(iterations=CB_iterations,
                                task_type="CPU",
                                devices='0:1',
                                  use_best_model=True,)
@@ -501,18 +505,20 @@ def main(kNN=13,max_iter=100,max_estimators=150):
     # Вторая - для тестовой выборки из расширенных данных.
     # 
     
-    print(best_metrics)
-    
-    print(best_Model)
+    print("CB модель обучена")
     return best_Model
+    
 if __name__ == "__main__":
     st.header("""Параметры для обучения моделей. Будет выбрана лучше модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
     kNN = st.slider('классификатор умный kNN', 1, 25, 13, 1)
     LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
     max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
+    RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
+    XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
+    CB_iterations = st.slider('Число деревьев в методе градиентного бустинга', 1, 3000, 1000, 1)
 
     if  st.button("Запуск обучения модели"):
         st.write('Идет обучение модели и выбор лучшей')
-        model = main(kNN, LR_max_iter, max_estimators)
+        model = main(kNN, LR_max_iter, max_estimators,RF_n_estimators,XGB_estimators,CB_iterations)
         st.write('Обучение модели законцено. Лучшая модель:')
         st.write(model)        
