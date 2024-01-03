@@ -519,9 +519,10 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         print("CB модель обучена")
     return best_Model
 def main():
+   global model
    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
    if page == "Параметры моделей и выбор лучшей модели":
-       global model
+
        st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
        st.write(model)
        KNN_check = st.checkbox('Классификатор умный kNN',value=False)
@@ -544,7 +545,6 @@ def main():
            st.write(model)   
        st.write(model)
    elif page == "Выполнение прогноза банкротства":
-       global model
        st.header("Прогноз банкротства на основании финансовых показателей компании")
        st.write(model)
        if model == 0:
