@@ -301,7 +301,7 @@ best_Model = clf_knn
 
 # """рассмотрим ещё несколько моделей, которые можно использовать для обучения на нашей выборке. И выберем самую лучшую по показателю F1.
 
-1. Logistic Regression
+# 1. Logistic Regression
 """
 
 clf = LogisticRegression(class_weight = 'balanced')
@@ -446,13 +446,13 @@ if metrics.f1_score(y_test, clf_r) > best_f1:
   best_metrics_s = metrics.classification_report(y_s_test, clf_r_s)
   print('best_s_f1:',best_s_f1)
 
-"""Оба параметра стали ещё лучше. посмотрим расширенные значения метрик:"""
+# """Оба параметра стали ещё лучше. посмотрим расширенные значения метрик:"""
 
 print(best_metrics_s)
 
 print(best_metrics)
 
-"""И попробуем последнюю, пятую модель:
+# """И попробуем последнюю, пятую модель:
 # 5. CatBoostClassifier
 # """
 
