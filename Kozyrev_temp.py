@@ -561,6 +561,7 @@ def predict_bunkrot(file_data):
     st.write(y)
    
 if __name__ == "__main__":
+    global model
     if 'model' not in locals() and 'model' not in globals():
         model = 1
         st.write("присвоили значение модели:",model)
