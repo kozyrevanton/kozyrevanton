@@ -522,6 +522,7 @@ def main():
     model = 0
     if page == "Параметры моделей и выбор лучшей модели":
         st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
+        st.write(model)
         KNN_check = st.checkbox('Классификатор умный kNN',value=True)
         KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
         LR_check = st.checkbox('Метод логистической регрессии',value=True)
@@ -540,9 +541,11 @@ def main():
             model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
             st.write('Обучение модели закончено. Лучшая модель:')
             st.write(model)   
+        st.write(model)
             
     elif page == "Выполнение прогноза банкротства":
         st.header("Прогноз банкротства на основании финансовых показателей компании")
+        st.write(model)
         if model == 0:
             st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
         else:
