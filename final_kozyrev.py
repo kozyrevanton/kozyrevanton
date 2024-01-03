@@ -38,6 +38,7 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
+import pickle
 
 def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_check=True,CB_check=True, kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
     # Считываем данные
@@ -519,9 +520,10 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         print("CB модель обучена")
     return best_Model
 def main():
+   global model
    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
    if page == "Параметры моделей и выбор лучшей модели":
-       global model
+
        st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
        st.write(model)
        KNN_check = st.checkbox('Классификатор умный kNN',value=False)
@@ -538,15 +540,20 @@ def main():
        CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
        st.write("После обучения модели можно будет проводить анализ данных")    
        if  st.button("Запуск обучения модели"):
-           global model
            st.write('Идет обучение модели и выбор лучшей')
            model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
+           with open('data.pickle', 'wb') as f:
+               # Pickle the 'data' dictionary using the highest protocol available.
+               pickle.dump(model, f, pickle.HIGHEST_PROTOCOL)
            st.write('Обучение модели закончено. Лучшая модель:')
            st.write(model)   
        st.write(model)
    elif page == "Выполнение прогноза банкротства":
-       global model
        st.header("Прогноз банкротства на основании финансовых показателей компании")
+       with open('data.pickle', 'rb') as f:
+           # The protocol version used is detected automatically, so we do not
+           # have to specify it.
+           model = pickle.load(f)
        st.write(model)
        if model == 0:
            st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
@@ -563,9 +570,12 @@ def predict_bunkrot(file_data):
     st.write(y)
    
 if __name__ == "__main__":
-    global model
-    if 'model' not in locals() and 'model' not in globals():
+
+    if ('model' not in locals()) and ('model' not in globals()):
         model = 1
         st.write("присвоили значение модели:",model)
+    else:
+        st.write("Уже есть такая переменная:",model)
+        
     st.write(model)
     main()
