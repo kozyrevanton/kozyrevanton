@@ -38,7 +38,7 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
-def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimators=100,CB_iterations=1000):
+def main(kNN=13,max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
     # Считываем данные
     print("Начинаем считывать файл с данными")
     df = pd.read_csv('data.csv')
@@ -312,7 +312,7 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     # 1. Logistic Regression
 
     
-    clf = LogisticRegression(class_weight = 'balanced', max_iter=LR_max_iter)
+    clf = LogisticRegression(class_weight = 'balanced', max_iter=lr_max_iter)
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
     
@@ -322,7 +322,7 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     
     print(metrics.classification_report(y_test, predictions))
     
-    clf = LogisticRegression(class_weight = 'balanced', max_iter=LR_max_iter)
+    clf = LogisticRegression(class_weight = 'balanced', max_iter=lr_max_iter)
     
     X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, test_size=0.2)
     
@@ -388,7 +388,7 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     # 3. RandomForestClassifier
     # 
     
-    rf = RandomForestClassifier(n_estimators=RF_n_estimators)
+    rf = RandomForestClassifier(n_estimators=rf_n_estimators)
     rf.fit(X_train, y_train)
     rfc = rf.predict(X_test)
     
@@ -399,7 +399,7 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     
     # Модель не стала лучше. Обученим на расширенных данных:
     
-    rf = RandomForestClassifier(n_estimators=RF_n_estimators)
+    rf = RandomForestClassifier(n_estimators=rf_n_estimators)
     rf.fit(X_s_train, y_s_train)
     rfc = rf.predict(X_test)
     rfc_s = rf.predict(X_s_test)
@@ -424,7 +424,7 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     # 4. Градиентный бустринг
     # 
     
-    param_dist = {'objective':'binary:logistic', 'n_estimators':XGB_estimators}
+    param_dist = {'objective':'binary:logistic', 'n_estimators':xgb_estimators}
     
     clf = xgb.XGBClassifier(**param_dist)
     
@@ -467,7 +467,7 @@ def main(kNN=13,max_iter=100,max_estimators=150,RF_n_estimators=500,XGB_estimato
     # 5. CatBoostClassifier
     # 
     
-    model = CatBoostClassifier(iterations=CB_iterations,
+    model = CatBoostClassifier(iterations=cb_iterations,
                                task_type="CPU",
                                devices='0:1',
                                  use_best_model=True,)
