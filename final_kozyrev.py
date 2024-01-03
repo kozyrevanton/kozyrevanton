@@ -100,15 +100,14 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
     # """Для начала используем модель k ближайших соседей"""
     smt = SMOTE()
     X_smote, y_smote = smt.fit_resample(X, y)
-    
+    # разбиваем матрицу признаков и ответы на обучающую и тестовую выборки (80 / 20)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, test_size=0.2)
     print("Данные для обучения и тесты расширены")
     
     if KNN_check:
         # инициализируем алгоритм
         knn = KNeighborsClassifier()
-        # разбиваем матрицу признаков и ответы на обучающую и тестовую выборки (80 / 20)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         # обучаем алгоритм на train
         knn.fit(X_train, y_train)
         # получаем прогнозы на основе признаков test
@@ -214,8 +213,6 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
         
         # """Получается самое лучшее значение 13 - его и подставим дальше"""
         
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-        print("Данные для обучения и тесты выделены")
         # Используем классификатор умный kNN
         
         # импортируем и создаем knn классификатор по аналогии
@@ -323,8 +320,6 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
     if LR_check:    
         clf = LogisticRegression(class_weight = 'balanced', max_iter=lr_max_iter)
         
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
-        
         clf.fit(X_train, y_train)
         
         predictions = clf.predict(X_test)
@@ -332,8 +327,6 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
         print(metrics.classification_report(y_test, predictions))
         
         clf = LogisticRegression(class_weight = 'balanced', max_iter=lr_max_iter)
-        
-        X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, test_size=0.2)
         
         clf.fit(X_s_train, y_s_train)
         
