@@ -518,6 +518,14 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         print("CB модель обучена")
     return best_Model
 def main(model=0):
+    engine = create_engine('postgresql://<username>:<password>@localhost:5432/<database name>')
+
+    #Получение ID сеанса 
+    session_id = get_session_id()
+
+    #Создание таблиц состояния сеанса 
+    engine.execute("CREATE TABLE IF NOT EXISTS %s (size text)" % (session_id))
+    
     page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
     if page == "Параметры моделей и выбор лучшей модели":
         st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
@@ -538,12 +546,14 @@ def main(model=0):
         if  st.button("Запуск обучения модели"):
             st.write('Идет обучение модели и выбор лучшей')
             model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
+            write_state('model',model,engine,session_id)
             st.write('Обучение модели закончено. Лучшая модель:')
             st.write(model)   
         st.write(model)
             
     elif page == "Выполнение прогноза банкротства":
         st.header("Прогноз банкротства на основании финансовых показателей компании")
+        model = read_state('model',engine,session_id)
         st.write(model)
         if model == 0:
             st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
