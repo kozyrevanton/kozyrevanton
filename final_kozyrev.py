@@ -518,7 +518,7 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         
         print("CB модель обучена")
     return best_Model
-def main(model=0):
+def main():
     engine = create_engine('postgresql://<username>:<password>@localhost:5432/<database name>')
 
     #Получение ID сеанса 
@@ -571,4 +571,4 @@ def predict_bunkrot(model,file_data):
 if __name__ == "__main__":
     if model is None:
         model = 1
-    main(model)
+    main()
