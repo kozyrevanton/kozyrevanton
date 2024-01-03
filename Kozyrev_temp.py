@@ -38,6 +38,7 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
+global model
 
 def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_check=True,CB_check=True, kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
     # Считываем данные
@@ -563,8 +564,11 @@ def predict_bunkrot(file_data):
    
 if __name__ == "__main__":
     global model
-    if 'model' not in locals() and 'model' not in globals():
+    if ('model' not in locals()) and ('model' not in globals()):
         model = 1
         st.write("присвоили значение модели:",model)
+    else:
+        st.write("Уже есть такая переменная:",model)
+        
     st.write(model)
     main()
