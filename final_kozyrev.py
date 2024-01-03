@@ -340,7 +340,7 @@ if metrics.f1_score(y_s_test, LR_s) > best_s_f1:
   best_metrics_s = metrics.classification_report(y_s_test, LR_s)
   print('best_s_f1:',best_s_f1)
 
-# """Рассмотрим следующую модель:
+# Рассмотрим следующую модель:
 # 2. AdaBoostClassifier
 
 # Обучим на обычной выборке, и на расширенной
