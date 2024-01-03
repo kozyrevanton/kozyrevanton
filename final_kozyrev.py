@@ -517,7 +517,7 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         
         print("CB модель обучена")
     return best_Model
-def main(model):
+def main(model=0):
     page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
     if page == "Параметры моделей и выбор лучшей модели":
         st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
@@ -560,5 +560,5 @@ def predict_bunkrot(model,file_data):
     st.write(y)
    
 if __name__ == "__main__":
-    model = 0
+    model = 1
     main(model)
