@@ -513,7 +513,8 @@ def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estim
     
 if __name__ == "__main__":
     st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
-    KNN = st.slider('классификатор умный kNN', 1, 25, 13, 1)
+    KNN_check = st.checkbox('классификатор умный kNN')
+    KNN = st.slider('', 1, 25, 13, 1)
     LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
     Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
     RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
