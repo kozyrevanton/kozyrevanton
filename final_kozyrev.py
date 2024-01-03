@@ -38,7 +38,7 @@ import warnings
 warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
-def main(kNN=13,max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
+def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
     # Считываем данные
     print("Начинаем считывать файл с данными")
     df = pd.read_csv('data.csv')
@@ -522,6 +522,6 @@ if __name__ == "__main__":
     st.write("После обучения модели можно будет проводить анализ данных")    
     if  st.button("Запуск обучения модели"):
         st.write('Идет обучение модели и выбор лучшей')
-        model = main(kNN=KNN,max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
+        model = main(kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
         st.write('Обучение модели законцено. Лучшая модель:')
         st.write(model)        
