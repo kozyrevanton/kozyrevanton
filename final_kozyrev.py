@@ -475,34 +475,34 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
     # 5. CatBoostClassifier
     # 
     if CB_check:
-        model = CatBoostClassifier(iterations=cb_iterations,
+        model_CB = CatBoostClassifier(iterations=cb_iterations,
                                    task_type="CPU",
                                    devices='0:1',
                                      use_best_model=True,)
         
-        model.fit(X_train, y_train, verbose=True, eval_set=[(X_test, y_test)])
+        model_CB.fit(X_train, y_train, verbose=True, eval_set=[(X_test, y_test)])
         
-        preds = model.predict(X_test)
+        preds = model_CB.predict(X_test)
         
         if metrics.f1_score(y_test, preds) > best_f1:
           best_f1 = metrics.f1_score(y_test, preds)
           best_metrics = metrics.classification_report(y_test, preds)
           print('best_f1:',best_f1) 
-          best_Model = model
+          best_Model = model_CB
         
           
         
         # результаты модели не улучшились. Обучим на расширенных данныхх, как и ранее:
         
-        model.fit(X_s_train, y_s_train, verbose=True, eval_set=[(X_s_test, y_s_test)])
-        preds = model.predict(X_test)
-        preds_s = model.predict(X_s_test)
+        model_CB.fit(X_s_train, y_s_train, verbose=True, eval_set=[(X_s_test, y_s_test)])
+        preds = model_CB.predict(X_test)
+        preds_s = model_CB.predict(X_s_test)
         
         if metrics.f1_score(y_test, preds) > best_f1:
           best_f1 = metrics.f1_score(y_test, preds)
           best_metrics = metrics.classification_report(y_test, preds)
           print('best_f1:',best_f1)
-          best_Model = model
+          best_Model = model_CB
          
         
         if metrics.f1_score(y_s_test, preds_s) > best_s_f1:
@@ -520,40 +520,41 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
     return best_Model
 def main():
    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
-   global model
    if page == "Параметры моделей и выбор лучшей модели":
-        st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
-        st.write(model)
-        KNN_check = st.checkbox('Классификатор умный kNN',value=False)
-        KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
-        LR_check = st.checkbox('Метод логистической регрессии',value=True)
-        LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
-        AB_check = st.checkbox('Метод AdaBoost',value=False)
-        Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
-        RF_check = st.checkbox('Метод Случайного леса',value=False)
-        RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
-        XGB_check = st.checkbox('Метод градиентного бустинга',value=False)
-        XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
-        CB_check = st.checkbox('Модель CatBoost',value=False)
-        CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
-        st.write("После обучения модели можно будет проводить анализ данных")    
-        if  st.button("Запуск обучения модели"):
-            st.write('Идет обучение модели и выбор лучшей')
-            model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
-            st.write('Обучение модели закончено. Лучшая модель:')
-            st.write(model)   
-        st.write(model)
-            
-    elif page == "Выполнение прогноза банкротства":
-        st.header("Прогноз банкротства на основании финансовых показателей компании")
-        st.write(model)
-        if model == 0:
-            st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
-        else:
-            st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
-            file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
-            if file_data is not None:
-                predict_bunkrot(file_data)
+       global model
+       st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
+       st.write(model)
+       KNN_check = st.checkbox('Классификатор умный kNN',value=False)
+       KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
+       LR_check = st.checkbox('Метод логистической регрессии',value=True)
+       LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
+       AB_check = st.checkbox('Метод AdaBoost',value=False)
+       Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
+       RF_check = st.checkbox('Метод Случайного леса',value=False)
+       RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
+       XGB_check = st.checkbox('Метод градиентного бустинга',value=False)
+       XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
+       CB_check = st.checkbox('Модель CatBoost',value=False)
+       CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
+       st.write("После обучения модели можно будет проводить анализ данных")    
+       if  st.button("Запуск обучения модели"):
+           global model
+           st.write('Идет обучение модели и выбор лучшей')
+           model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
+           st.write('Обучение модели закончено. Лучшая модель:')
+           st.write(model)   
+       st.write(model)
+   elif page == "Выполнение прогноза банкротства":
+       global model
+       st.header("Прогноз банкротства на основании финансовых показателей компании")
+       st.write(model)
+       if model == 0:
+           st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
+       else:
+           st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
+           file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
+           if file_data is not None:
+               predict_bunkrot(file_data)
        
 def predict_bunkrot(file_data):
     df = pd.read_csv(file_data)
@@ -562,6 +563,7 @@ def predict_bunkrot(file_data):
     st.write(y)
    
 if __name__ == "__main__":
+    global model
     if 'model' not in locals() and 'model' not in globals():
         model = 1
         st.write("присвоили значение модели:",model)
