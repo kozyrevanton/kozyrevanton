@@ -538,8 +538,9 @@ def main():
             st.write('Идет обучение модели и выбор лучшей')
             model = Learning_model(kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
             st.write('Обучение модели закончено. Лучшая модель:')
-            st.write(model)     
-     elif page == "Выполнение прогноза банкротства":
+            st.write(model)   
+            
+    elif page == "Выполнение прогноза банкротства":
         st.header("Прогноз банкротства на основании финансовых показателей компании")
         st.write("Выберите файл для загрузки исходных данных")           
        
