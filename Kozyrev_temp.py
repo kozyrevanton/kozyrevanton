@@ -39,6 +39,8 @@ warnings.filterwarnings(action="ignore")
 
 from catboost import CatBoostClassifier
 def main(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500,xgb_estimators=100,cb_iterations=1000):
+    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
+
     # Считываем данные
     print("Начинаем считывать файл с данными")
     df = pd.read_csv('data.csv')
