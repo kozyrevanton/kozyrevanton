@@ -546,7 +546,7 @@ def main(model=0):
         st.write("После обучения модели можно будет проводить анализ данных")    
         if  st.button("Запуск обучения модели"):
             st.write('Идет обучение модели и выбор лучшей')
-            global model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
+            model = Learning_model(KNN_check,LR_check,AB_check,RF_check,XGB_check,CB_check, kNN=KNN,lr_max_iter=LR_max_iter, max_estimators=Max_estimators,rf_n_estimators=RF_n_estimators,xgb_estimators=XGB_estimators,cb_iterations=CB_iterations)
             st.write('Обучение модели закончено. Лучшая модель:')
             st.write(model)   
         st.write(model)
@@ -570,5 +570,5 @@ def predict_bunkrot(model,file_data):
    
 if __name__ == "__main__":
     if model is None:
-        global model = 1
+        model = 1
     main(model)
