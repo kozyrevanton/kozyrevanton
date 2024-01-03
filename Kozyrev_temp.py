@@ -104,7 +104,7 @@ def Learning_model(kNN=13,lr_max_iter=100,max_estimators=150,rf_n_estimators=500
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     X_s_train, X_s_test, y_s_train, y_s_test = train_test_split(X_smote, y_smote, test_size=0.2)
     print("Данные для обучения и тесты расширены")
-    
+    st.write(KNN_check)
     if KNN_check:
         # инициализируем алгоритм
         knn = KNeighborsClassifier()
