@@ -536,7 +536,7 @@ def main():
        XGB_check = st.checkbox('Метод градиентного бустинга',value=True)
        XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 200, 1)
        CB_check = st.checkbox('Модель CatBoost',value=True)
-       CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
+       CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 5000, 2000, 1)
        st.write("После обучения модели можно будет проводить анализ данных")    
        if  st.button("Запуск обучения модели"):
            st.write('Идет обучение модели и выбор лучшей')
