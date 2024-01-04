@@ -519,6 +519,7 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         
         print("CB модель обучена")
     return best_Model
+
 def main():
    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
    if page == "Параметры моделей и выбор лучшей модели":
@@ -544,6 +545,7 @@ def main():
                # Pickle the 'data' dictionary using the highest protocol available.
                pickle.dump(model, f, pickle.HIGHEST_PROTOCOL)
            st.write('Обучение модели закончено. Лучшая модель:')
+           st.write(model)
 
    elif page == "Выполнение прогноза банкротства":
        st.header("Прогноз банкротства на основании финансовых показателей компании")
@@ -558,7 +560,6 @@ def main():
            st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
        else:
            st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
-           st.write(model)              
            file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
            if file_data is not None:
                predict_bunkrot(model,file_data)
@@ -566,7 +567,6 @@ def main():
 def predict_bunkrot(model,file_data):
     df = pd.read_csv(file_data)
     X = np.array(df[df._get_numeric_data().columns])
-    st.write(model)     
     y = model.predict(X)
     st.write("Результат предсказания банкротства:")
     st.write(y)
