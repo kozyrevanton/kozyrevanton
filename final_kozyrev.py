@@ -519,13 +519,12 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         
         print("CB модель обучена")
     return best_Model
+
 def main():
-   global model
    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
    if page == "Параметры моделей и выбор лучшей модели":
 
        st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
-       st.write(model)
        KNN_check = st.checkbox('Классификатор умный kNN',value=False)
        KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
        LR_check = st.checkbox('Метод логистической регрессии',value=True)
@@ -546,24 +545,26 @@ def main():
                # Pickle the 'data' dictionary using the highest protocol available.
                pickle.dump(model, f, pickle.HIGHEST_PROTOCOL)
            st.write('Обучение модели закончено. Лучшая модель:')
-           st.write(model)   
-       st.write(model)
+           st.write(model)
+
    elif page == "Выполнение прогноза банкротства":
        st.header("Прогноз банкротства на основании финансовых показателей компании")
        with open('data.pickle', 'rb') as f:
            # The protocol version used is detected automatically, so we do not
            # have to specify it.
-           model = pickle.load(f)
-       st.write(model)
+           try:
+               model = pickle.load(f)
+           except pickle.UnpicklingError:
+               model = 0
        if model == 0:
            st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
        else:
            st.write("Сейчас вам необходимо загрузить данные фирм для анализа на предмет потенциального банкротства")  
            file_data = st.file_uploader("Выберите файл для загрузки исходных данных",type=["csv"])           
            if file_data is not None:
-               predict_bunkrot(file_data)
+               predict_bunkrot(model,file_data)
        
-def predict_bunkrot(file_data):
+def predict_bunkrot(model,file_data):
     df = pd.read_csv(file_data)
     X = np.array(df[df._get_numeric_data().columns])
     y = model.predict(X)
@@ -573,10 +574,5 @@ def predict_bunkrot(file_data):
 if __name__ == "__main__":
 
     if ('model' not in locals()) and ('model' not in globals()):
-        model = 1
-        st.write("присвоили значение модели:",model)
-    else:
-        st.write("Уже есть такая переменная:",model)
-        
-    st.write(model)
+        model = 0
     main()
