@@ -552,7 +552,7 @@ def main():
            # have to specify it.
            try:
                model = pickle.load(f)
-           except UnpicklingError:
+           except pickle.UnpicklingError:
                model = 0
        if model == 0:
            st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
