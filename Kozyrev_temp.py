@@ -525,17 +525,17 @@ def main():
    if page == "Параметры моделей и выбор лучшей модели":
 
        st.header("""Параметры для обучения моделей. Будет выбрана лучшая модель по метрике F-1, из всех ниже перечисленных, по этим параметрам:""")
-       KNN_check = st.checkbox('Классификатор умный kNN',value=False)
+       KNN_check = st.checkbox('Классификатор умный kNN',value=True)
        KNN = st.slider('Количество ближайших соседей', 1, 25, 13, 1)
        LR_check = st.checkbox('Метод логистической регрессии',value=True)
        LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
-       AB_check = st.checkbox('Метод AdaBoost',value=False)
+       AB_check = st.checkbox('Метод AdaBoost',value=True)
        Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
-       RF_check = st.checkbox('Метод Случайного леса',value=False)
+       RF_check = st.checkbox('Метод Случайного леса',value=True)
        RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
-       XGB_check = st.checkbox('Метод градиентного бустинга',value=False)
+       XGB_check = st.checkbox('Метод градиентного бустинга',value=True)
        XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
-       CB_check = st.checkbox('Модель CatBoost',value=False)
+       CB_check = st.checkbox('Модель CatBoost',value=True)
        CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
        st.write("После обучения модели можно будет проводить анализ данных")    
        if  st.button("Запуск обучения модели"):
