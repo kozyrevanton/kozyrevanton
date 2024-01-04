@@ -544,7 +544,7 @@ def main():
                # Pickle the 'data' dictionary using the highest protocol available.
                pickle.dump(model, f, pickle.HIGHEST_PROTOCOL)
            st.write('Обучение модели закончено. Лучшая модель:')
-       st.write(model)
+
    elif page == "Выполнение прогноза банкротства":
        st.header("Прогноз банкротства на основании финансовых показателей компании")
        with open('data.pickle', 'rb') as f:
