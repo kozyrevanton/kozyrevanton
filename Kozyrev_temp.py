@@ -573,5 +573,4 @@ if __name__ == "__main__":
 
     if ('model' not in locals()) and ('model' not in globals()):
         model = 0
-    st.write(model)
     main()
