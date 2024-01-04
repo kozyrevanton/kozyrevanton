@@ -534,7 +534,7 @@ def main():
        RF_check = st.checkbox('Метод Случайного леса',value=True)
        RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 250, 1)
        XGB_check = st.checkbox('Метод градиентного бустинга',value=True)
-       XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
+       XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 200, 1)
        CB_check = st.checkbox('Модель CatBoost',value=True)
        CB_iterations = st.slider('Количество итераций в модели CatBoost', 1, 3000, 1000, 1)
        st.write("После обучения модели можно будет проводить анализ данных")    
