@@ -520,7 +520,6 @@ def Learning_model(KNN_check=True,LR_check=True,AB_check=True,RF_check=True,XGB_
         print("CB модель обучена")
     return best_Model
 def main():
-   global model
    page = st.sidebar.selectbox("Выбрать страницу", ["Параметры моделей и выбор лучшей модели", "Выполнение прогноза банкротства"])
    if page == "Параметры моделей и выбор лучшей модели":
 
@@ -546,15 +545,16 @@ def main():
                # Pickle the 'data' dictionary using the highest protocol available.
                pickle.dump(model, f, pickle.HIGHEST_PROTOCOL)
            st.write('Обучение модели закончено. Лучшая модель:')
-           st.write(model)   
        st.write(model)
    elif page == "Выполнение прогноза банкротства":
        st.header("Прогноз банкротства на основании финансовых показателей компании")
        with open('data.pickle', 'rb') as f:
            # The protocol version used is detected automatically, so we do not
            # have to specify it.
-           model = pickle.load(f)
-       st.write(model)
+           try:
+               model = pickle.load(f)
+           exept UnpicklingError:
+               model = 0
        if model == 0:
            st.write("Нет модели для прогноза данных. Перейдите на первую страницу и обучите модель")
        else:
@@ -573,10 +573,6 @@ def predict_bunkrot(file_data):
 if __name__ == "__main__":
 
     if ('model' not in locals()) and ('model' not in globals()):
-        model = 1
-        st.write("присвоили значение модели:",model)
-    else:
-        st.write("Уже есть такая переменная:",model)
-        
+        model = 0
     st.write(model)
     main()
