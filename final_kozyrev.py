@@ -530,7 +530,7 @@ def main():
        LR_check = st.checkbox('Метод логистической регрессии',value=True)
        LR_max_iter = st.slider('Количество итераций логистической регрессии', 1, 1000, 100, 1)
        AB_check = st.checkbox('Метод AdaBoost',value=True)
-       Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 150, 1)
+       Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 300, 1)
        RF_check = st.checkbox('Метод Случайного леса',value=True)
        RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
        XGB_check = st.checkbox('Метод градиентного бустинга',value=True)
