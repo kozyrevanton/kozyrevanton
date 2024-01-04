@@ -532,7 +532,7 @@ def main():
        AB_check = st.checkbox('Метод AdaBoost',value=True)
        Max_estimators = st.slider('Максимальное количество estimators в модели AdaBoost', 1, 1000, 300, 1)
        RF_check = st.checkbox('Метод Случайного леса',value=True)
-       RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 500, 1)
+       RF_n_estimators = st.slider('Количество деревьев в методе случайного леса', 1, 1000, 250, 1)
        XGB_check = st.checkbox('Метод градиентного бустинга',value=True)
        XGB_estimators = st.slider('Число деревьев в методе градиентного бустинга', 1, 1000, 100, 1)
        CB_check = st.checkbox('Модель CatBoost',value=True)
